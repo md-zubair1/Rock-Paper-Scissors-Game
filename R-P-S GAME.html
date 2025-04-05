@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock-Paper-Scissors</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f3f3f3;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #333;
+      margin-top: 20px;
+    }
+    .game-container {
+      margin-top: 50px;
+    }
+    .choices {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .choices img {
+      width: 100px;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+    .choices img:hover {
+      transform: scale(1.2);
+    }
+    .result {
+      font-size: 24px;
+      margin-top: 30px;
+    }
+    .result span {
+      font-weight: bold;
+    }
+    .hands-display {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 20px;
+    }
+    .hands-display img {
+      width: 150px;
+      transition: transform 0.5s ease-in-out;
+    }
+    .throw {
+      transform: scale(1.2) rotate(10deg);
+      animation: throwHand 0.5s forwards;
+    }
+    @keyframes throwHand {
+      0% {
+        transform: scale(1) rotate(0deg);
+      }
+      50% {
+        transform: scale(1.2) rotate(10deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Rock-Paper-Scissors Game</h1>
+  
+  <div class="game-container">
+    <!-- Player's Choices -->
+    <div class="choices">
+      <img src="https://img.icons8.com/color/96/rock.png" alt="Rock" onclick="playGame('rock')" title="Rock">
+      <img src="https://img.icons8.com/color/96/paper.png" alt="Paper" onclick="playGame('paper')" title="Paper">
+      <img src="https://img.icons8.com/color/96/scissors.png" alt="Scissors" onclick="playGame('scissors')" title="Scissors">
+    </div>
+
+    <!-- Hands Display -->
+    <div class="hands-display">
+      <img id="player-hand" src="" alt="Player's Hand">
+      <img id="computer-hand" src="" alt="Computer's Hand">
+    </div>
+
+    <!-- Result Display -->
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const hands = {
+      rock: "https://img.icons8.com/color/150/rock.png",
+      paper: "https://img.icons8.com/color/150/paper.png",
+      scissors: "https://img.icons8.com/color/150/scissors.png"
+    };
+
+    function getComputerChoice() {
+      const choices = ['rock', 'paper', 'scissors'];
+      return choices[Math.floor(Math.random() * choices.length)];
+    }
+
+    function determineWinner(player, computer) {
+      if (player === computer) {
+        return "It's a tie!";
+      } else if (
+        (player === 'rock' && computer === 'scissors') ||
+        (player === 'scissors' && computer === 'paper') ||
+        (player === 'paper' && computer === 'rock')
+      ) {
+        return "You win!";
+      } else {
+        return "Computer wins!";
+      }
+    }
+
+    function playGame(playerChoice) {
+      // Clear previous result
+      document.getElementById('result').innerText = "";
+
+      // Set player's hand image
+      document.getElementById('player-hand').src = hands[playerChoice];
+
+      // Add throw animation
+      document.getElementById('player-hand').classList.add('throw');
+
+      // Randomly select computer choice
+      const computerChoice = getComputerChoice();
+
+      // Set computer's hand image after a delay
+      setTimeout(() => {
+        document.getElementById('computer-hand').src = hands[computerChoice];
+
+        // Add throw animation to computer's hand
+        document.getElementById('computer-hand').classList.add('throw');
+
+        // Determine the winner and display the result
+        const resultText = `
+          You chose <span>${playerChoice}</span>. 
+          Computer chose <span>${computerChoice}</span>. 
+          ${determineWinner(playerChoice, computerChoice)}
+        `;
+        document.getElementById('result').innerHTML = resultText;
+
+        // Reset hands after another delay
+        setTimeout(() => {
+          document.getElementById('player-hand').src = "";
+          document.getElementById('computer-hand').src = "";
+          document.getElementById('player-hand').classList.remove('throw');
+          document.getElementById('computer-hand').classList.remove('throw');
+        }, 2000);
+        
+      }, 1000); // Add a delay of 1 second for computer's choice
+    }
+  </script>
+</body>
+</html>
